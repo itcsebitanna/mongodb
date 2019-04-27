@@ -1,0 +1,28 @@
+#insertion
+library (ggplot2)
+library (dplyr)
+library (maps)
+library (ggmap)
+library (mongolite)
+library (lubridate)
+library (gridExtra)
+crimes=data.table::fread("Crimes_2001_to_present.csv")
+names (crimes)
+names(crimes) = gsub(" ","",names(crimes))
+names(crimes)
+my_collection = mongo(collection = "crimes", db = "Chicago") # create
+connection, database and collection
+my_collection$insert(crimes)
+my_collection$count()
+my_collection$iterate()$one()
+
+
+#querying
+query1= my_collection$find('{"PrimaryType" : "ASSAULT", "Domestic" :
+"true" }')
+query2= my_collection$find('{"PrimaryType" : "ASSAULT", "Domestic" :
+"true" }',
+fields = '{"_id":0, "PrimaryType":1, "Domestic":1}')
+ncol(query1) # with all the columns
+ncol(query2) # only the selected columns
+
